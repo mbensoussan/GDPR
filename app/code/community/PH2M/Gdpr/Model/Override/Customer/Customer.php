@@ -53,17 +53,21 @@ class PH2M_Gdpr_Model_Override_Customer_Customer extends Mage_Customer_Model_Cus
         // START REWRITE
         // IF password format for gdpr is disable, use magento basic check
         if (!Mage::helper('phgdpr/password')->isPasswordGdprValidationEnabled()) {
-            if (!$this->getId() && !Zend_Validate::is($password, 'NotEmpty')) {
-                $errors[] = Mage::helper('customer')->__('The password cannot be empty.');
-            }
-            if (strlen($password) && !Zend_Validate::is($password, 'StringLength', [6])) {
-                $errors[] = Mage::helper('customer')->__('The minimum password length is %s', 6);
-            }
+			if (!$this->getId() && !Zend_Validate::is($password , 'NotEmpty')) {
+				$errors[] = Mage::helper('customer')->__('The password cannot be empty.');
+			}
+			if (strlen($password) && !Zend_Validate::is($password, 'StringLength', array(self::MINIMUM_PASSWORD_LENGTH))) {
+				$errors[] = Mage::helper('customer')
+					->__('The minimum password length is %s', self::MINIMUM_PASSWORD_LENGTH);
+			}
+			if (strlen($password) && !Zend_Validate::is($password, 'StringLength', array('max' => self::MAXIMUM_PASSWORD_LENGTH))) {
+				$errors[] = Mage::helper('customer')
+					->__('Please enter a password with at most %s characters.', self::MAXIMUM_PASSWORD_LENGTH);
+			}
         } else {
             if (!$this->getId() && strlen($password) && $errorPassword = Mage::helper('phgdpr/password')->invalidPasswordFormat($password)) {
                 $errors[] = $errorPassword;
             }
-        }
         // END REWRITE
 
         $confirmation = $this->getPasswordConfirmation();
