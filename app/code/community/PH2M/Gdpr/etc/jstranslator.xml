@@ -1,0 +1,5 @@
+<jstranslator>  
+    <validate-gdpr-password translate="message">
+        <message>Your password must respect at least 3 of the following conditions: one capital letter, one lowercase letter, one number, one special character and contains at least 8 characters.</message>
+    </validate-gdpr-password>
+</jstranslator> 
